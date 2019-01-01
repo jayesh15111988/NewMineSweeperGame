@@ -9,23 +9,48 @@
 /* Begin PBXBuildFile section */
 		E3BB614921DBBC5300888202 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB614821DBBC5300888202 /* AppDelegate.swift */; };
 		E3BB614B21DBBC5300888202 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB614A21DBBC5300888202 /* ViewController.swift */; };
-		E3BB614E21DBBC5300888202 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3BB614C21DBBC5300888202 /* Main.storyboard */; };
 		E3BB615021DBBC5500888202 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3BB614F21DBBC5500888202 /* Assets.xcassets */; };
 		E3BB615321DBBC5500888202 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3BB615121DBBC5500888202 /* LaunchScreen.storyboard */; };
+		E3BB616121DBBD5B00888202 /* GameHomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB616021DBBD5B00888202 /* GameHomePageViewController.swift */; };
+		E3BB616521DBBE4800888202 /* TopHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB616421DBBE4800888202 /* TopHeaderView.swift */; };
+		E3BB616D21DBBE8B00888202 /* NewMineSweeperGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB616C21DBBE8B00888202 /* NewMineSweeperGameTests.swift */; };
+		E3BB617521DBC73600888202 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB617421DBC73600888202 /* UIView+Extension.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E3BB616F21DBBE8B00888202 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E3BB613D21DBBC5300888202 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E3BB614421DBBC5300888202;
+			remoteInfo = NewMineSweeperGame;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		E3BB614521DBBC5300888202 /* NewMineSweeperGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewMineSweeperGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3BB614821DBBC5300888202 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E3BB614A21DBBC5300888202 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		E3BB614D21DBBC5300888202 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E3BB614F21DBBC5500888202 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E3BB615221DBBC5500888202 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E3BB615421DBBC5500888202 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E3BB616021DBBD5B00888202 /* GameHomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHomePageViewController.swift; sourceTree = "<group>"; };
+		E3BB616421DBBE4800888202 /* TopHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopHeaderView.swift; sourceTree = "<group>"; };
+		E3BB616A21DBBE8B00888202 /* NewMineSweeperGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewMineSweeperGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3BB616C21DBBE8B00888202 /* NewMineSweeperGameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMineSweeperGameTests.swift; sourceTree = "<group>"; };
+		E3BB616E21DBBE8B00888202 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E3BB617421DBC73600888202 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E3BB614221DBBC5300888202 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3BB616721DBBE8B00888202 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -39,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				E3BB614721DBBC5300888202 /* NewMineSweeperGame */,
+				E3BB616B21DBBE8B00888202 /* NewMineSweeperGameTests */,
 				E3BB614621DBBC5300888202 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				E3BB614521DBBC5300888202 /* NewMineSweeperGame.app */,
+				E3BB616A21DBBE8B00888202 /* NewMineSweeperGameTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -54,14 +81,81 @@
 		E3BB614721DBBC5300888202 /* NewMineSweeperGame */ = {
 			isa = PBXGroup;
 			children = (
+				E3BB616221DBBE2D00888202 /* View */,
+				E3BB615F21DBBCF800888202 /* Screens */,
+				E3BB615E21DBBCC400888202 /* Utilities */,
+				E3BB615D21DBBCB700888202 /* Extensions */,
+				E3BB615C21DBBCAC00888202 /* Models */,
+				E3BB615B21DBBC9C00888202 /* CustomCells */,
+				E3BB615A21DBBC8800888202 /* Images */,
 				E3BB614821DBBC5300888202 /* AppDelegate.swift */,
 				E3BB614A21DBBC5300888202 /* ViewController.swift */,
-				E3BB614C21DBBC5300888202 /* Main.storyboard */,
 				E3BB614F21DBBC5500888202 /* Assets.xcassets */,
 				E3BB615121DBBC5500888202 /* LaunchScreen.storyboard */,
 				E3BB615421DBBC5500888202 /* Info.plist */,
 			);
 			path = NewMineSweeperGame;
+			sourceTree = "<group>";
+		};
+		E3BB615A21DBBC8800888202 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		E3BB615B21DBBC9C00888202 /* CustomCells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomCells;
+			sourceTree = "<group>";
+		};
+		E3BB615C21DBBCAC00888202 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E3BB615D21DBBCB700888202 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E3BB615E21DBBCC400888202 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E3BB617421DBC73600888202 /* UIView+Extension.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E3BB615F21DBBCF800888202 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				E3BB616021DBBD5B00888202 /* GameHomePageViewController.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		E3BB616221DBBE2D00888202 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E3BB616421DBBE4800888202 /* TopHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E3BB616B21DBBE8B00888202 /* NewMineSweeperGameTests */ = {
+			isa = PBXGroup;
+			children = (
+				E3BB616C21DBBE8B00888202 /* NewMineSweeperGameTests.swift */,
+				E3BB616E21DBBE8B00888202 /* Info.plist */,
+			);
+			path = NewMineSweeperGameTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,6 +178,24 @@
 			productReference = E3BB614521DBBC5300888202 /* NewMineSweeperGame.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E3BB616921DBBE8B00888202 /* NewMineSweeperGameTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E3BB617121DBBE8B00888202 /* Build configuration list for PBXNativeTarget "NewMineSweeperGameTests" */;
+			buildPhases = (
+				E3BB616621DBBE8B00888202 /* Sources */,
+				E3BB616721DBBE8B00888202 /* Frameworks */,
+				E3BB616821DBBE8B00888202 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E3BB617021DBBE8B00888202 /* PBXTargetDependency */,
+			);
+			name = NewMineSweeperGameTests;
+			productName = NewMineSweeperGameTests;
+			productReference = E3BB616A21DBBE8B00888202 /* NewMineSweeperGameTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -96,6 +208,10 @@
 				TargetAttributes = {
 					E3BB614421DBBC5300888202 = {
 						CreatedOnToolsVersion = 10.1;
+					};
+					E3BB616921DBBE8B00888202 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = E3BB614421DBBC5300888202;
 					};
 				};
 			};
@@ -113,6 +229,7 @@
 			projectRoot = "";
 			targets = (
 				E3BB614421DBBC5300888202 /* NewMineSweeperGame */,
+				E3BB616921DBBE8B00888202 /* NewMineSweeperGameTests */,
 			);
 		};
 /* End PBXProject section */
@@ -124,7 +241,13 @@
 			files = (
 				E3BB615321DBBC5500888202 /* LaunchScreen.storyboard in Resources */,
 				E3BB615021DBBC5500888202 /* Assets.xcassets in Resources */,
-				E3BB614E21DBBC5300888202 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3BB616821DBBE8B00888202 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,21 +259,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3BB614B21DBBC5300888202 /* ViewController.swift in Sources */,
+				E3BB616521DBBE4800888202 /* TopHeaderView.swift in Sources */,
 				E3BB614921DBBC5300888202 /* AppDelegate.swift in Sources */,
+				E3BB617521DBC73600888202 /* UIView+Extension.swift in Sources */,
+				E3BB616121DBBD5B00888202 /* GameHomePageViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3BB616621DBBE8B00888202 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3BB616D21DBBE8B00888202 /* NewMineSweeperGameTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		E3BB614C21DBBC5300888202 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E3BB614D21DBBC5300888202 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		E3BB617021DBBE8B00888202 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E3BB614421DBBC5300888202 /* NewMineSweeperGame */;
+			targetProxy = E3BB616F21DBBE8B00888202 /* PBXContainerItemProxy */;
 		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
 		E3BB615121DBBC5500888202 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -312,6 +446,44 @@
 			};
 			name = Release;
 		};
+		E3BB617221DBBE8B00888202 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = NewMineSweeperGameTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Wayfair.NewMineSweeperGameTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewMineSweeperGame.app/NewMineSweeperGame";
+			};
+			name = Debug;
+		};
+		E3BB617321DBBE8B00888202 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = NewMineSweeperGameTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Wayfair.NewMineSweeperGameTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewMineSweeperGame.app/NewMineSweeperGame";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -329,6 +501,15 @@
 			buildConfigurations = (
 				E3BB615821DBBC5500888202 /* Debug */,
 				E3BB615921DBBC5500888202 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E3BB617121DBBE8B00888202 /* Build configuration list for PBXNativeTarget "NewMineSweeperGameTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3BB617221DBBE8B00888202 /* Debug */,
+				E3BB617321DBBE8B00888202 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
