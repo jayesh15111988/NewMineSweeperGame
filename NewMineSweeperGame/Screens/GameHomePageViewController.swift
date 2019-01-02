@@ -16,6 +16,10 @@ class GameHomePageViewController: UIViewController {
         static let defaultViewHeight: CGFloat = 50.0
     }
 
+    enum GameStateConstants {
+        
+    }
+
     enum GameState {
         case notStarted
         case inProgress
@@ -35,6 +39,7 @@ class GameHomePageViewController: UIViewController {
     }
 
     struct ViewModel {
+
         let tileWidth: Double
         let totalTilesInRow: Int
         let gutterSpacing: Double
@@ -48,10 +53,18 @@ class GameHomePageViewController: UIViewController {
             let tilesInRow = Double(totalTilesInRow)
             return Int((tileWidth * tilesInRow) + (gutterSpacing * (tilesInRow - 1)))
         }
+
+        func totalNumberOfTilesOnScreen() -> Int {
+            return Int(pow(Double(totalTilesInRow), 2.0))
+        }
+
+        func didUserWinCurrentGame() -> Bool {
+            return self.totalNumberOfTilesRevealed == self.totalNumberOfTilesOnScreen() - self.totalNumberOfMines
+        }
     }
 
     let gridHolderView = UIView(frame: .zero)
-    var viewModel = ViewModel(tileWidth: 10, totalTilesInRow: 5, gutterSpacing: 5, totalNumberOfMines: 5, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0)
+    var viewModel = ViewModel(tileWidth: 50, totalTilesInRow: 5, gutterSpacing: 5, totalNumberOfMines: 5, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0)
     var minesLocationHolder: [Int: Bool] = [:]
     var numberOfSurroundingMinesHolder: [Int: Int] = [:]
 
@@ -67,9 +80,9 @@ class GameHomePageViewController: UIViewController {
     }
 }
 
-extension GameHomePageViewController {
-    private func headerViewModel() -> TopHeaderView.ViewModel {
-        var topHeaderViewModel = TopHeaderView.ViewModel(score: 0, gridSize: 3, isRevealing: true)
+private extension GameHomePageViewController {
+    func makeHeaderViewModel() -> TopHeaderView.ViewModel {
+        var topHeaderViewModel = TopHeaderView.ViewModel(score: 0, gridSize: 10, isRevealing: true)
 
         topHeaderViewModel.changeGridSizeButtonActionClosure = { [weak self] newGridSize in
             print(self.debugDescription)
@@ -80,19 +93,37 @@ extension GameHomePageViewController {
         }
 
         topHeaderViewModel.revealButtonActionClosure = { [weak self] isRevealing in
-            print(self.debugDescription)
+            self?.toggleMinesDisplayState(isRevealing: isRevealing)
         }
         return topHeaderViewModel
+    }
+
+    func toggleMinesDisplayState(isRevealing: Bool) {
+        for mineTile in minesButtonsHolder {
+            if isRevealing {
+                mineTile.stateViewModel.state = .revealed
+                mineTile.showImage(with: "mine")
+            } else {
+                mineTile.stateViewModel.state = .notSelected
+                mineTile.hideImage()
+            }
+            mineTile.updateBackgroundColor()
+        }
     }
 }
 
 extension GameHomePageViewController: ViewsCustomizable {
     func layoutCustomViews() {
-        topHeaderView = TopHeaderView(viewModel: headerViewModel())
+        topHeaderView = TopHeaderView(viewModel: makeHeaderViewModel())
     }
 
     func configureCustomViews() {
         gridHolderView.translatesAutoresizingMaskIntoConstraints = false
+        gridHolderView.backgroundColor = .black
+        gridHolderView.clipsToBounds = true
+        gridHolderView.layer.cornerRadius = 10.0
+        gridHolderView.layer.borderWidth = 2.0
+        gridHolderView.layer.borderColor = UIColor.black.cgColor
         self.createNewGridOnScreen()
     }
 }
@@ -124,12 +155,14 @@ extension GameHomePageViewController {
                 totalNumberOfMinesSurroundingGivenTile = self.numberOfSurroundingMinesHolder[buttonSequenceNumber] ?? 0
 
                 let tileButton = MineButton(position: CGPoint(x: xPosition, y: yPosition), dimension: CGFloat(viewModel.tileWidth), isMine: doesMineExistForTile, sequenceNumber: buttonSequenceNumber, numberOfSurroundingMines: totalNumberOfMinesSurroundingGivenTile)
-                tileButton.backgroundColor = .purple
 
                 tileButton.stateViewModel.sequenceOfSurroundingTiles = NeighboringTilesProvider.neighboringTilesForGivenMineTile(with: buttonSequenceNumber, totalNumberOfTilesInRow: viewModel.totalTilesInRow)
 
                 tileButton.gameOverClosure = { [weak self] in
                     //TODO: Show all mines
+                    self?.updateGameState()
+                    self?.showAllMines()
+                    self?.showAlert(with: "You clicked on mine and now game is over")
                     print(self.debugDescription)
                 }
 
@@ -144,7 +177,7 @@ extension GameHomePageViewController {
                     regularButtonsHolder.append(tileButton)
                 }
 
-                let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longGesturePressHandler(with:)))
+                let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressGesturePressHandler(with:)))
                 tileButton.addGestureRecognizer(longPressGesture)
                 gridHolderView.addSubview(tileButton)
 
@@ -180,7 +213,7 @@ extension GameHomePageViewController {
         }
     }
 
-    @objc func longGesturePressHandler(with gesture: UIGestureRecognizer) {
+    @objc func longPressGesturePressHandler(with gesture: UIGestureRecognizer) {
         guard gesture.state == .ended, let tileButton = gesture.view as? MineButton, tileButton.stateViewModel.state != .selected else { return }
 
         let currentState = tileButton.stateViewModel.state
@@ -190,6 +223,7 @@ extension GameHomePageViewController {
         } else {
             tileButton.stateViewModel.state = .questionMark
         }
+        tileButton.updateBackgroundColor()
 
         if tileButton.stateViewModel.state == .questionMark {
             tileButton.setTitle("?", for: .normal)
@@ -202,10 +236,10 @@ extension GameHomePageViewController {
         guard let mineButton = regularButtonsHolder.first(where: { $0.sequenceNumber == sequenceNumber }) else { return }
 
         if !mineButton.stateViewModel.isVisited {
-
+            
             viewModel.totalNumberOfTilesRevealed = viewModel.totalNumberOfTilesRevealed + 1
-            mineButton.stateViewModel.isVisited = true
-            mineButton.stateViewModel.state = .selected
+            mineButton.stateViewModel.isVisited = true            
+            mineButton.updateBackgroundColor()
 
             if mineButton.stateViewModel.numberOfSurroundingMines == 0 {
                 viewModel.currentScoreValue = viewModel.currentScoreValue + 1
@@ -223,6 +257,9 @@ extension GameHomePageViewController {
             topHeaderView.updateScore(score: viewModel.currentScoreValue)
 
             //TODO: Add additional logic to check if user has won
+            if self.viewModel.didUserWinCurrentGame() {
+                print("You won")
+            }
         }
     }
 
@@ -231,11 +268,10 @@ extension GameHomePageViewController {
     }
 
     func populateMinesHolder(with numberOfTilesInRow: Int) {
-        let maximumTileSequence = pow(Double(numberOfTilesInRow), 2.0)
 
         var minesGeneratedSoFar = 0
 
-        let maximumTileNumber = Int(maximumTileSequence)
+        let maximumTileNumber = viewModel.totalNumberOfTilesOnScreen()
 
         while (minesGeneratedSoFar < viewModel.totalNumberOfMines) {
 
@@ -259,5 +295,24 @@ extension GameHomePageViewController {
                 numberOfSurroundingMinesHolder[neighborSequence] = 1
             }
         }
+    }
+}
+
+extension GameHomePageViewController {
+
+    func updateGameState() {
+        self.viewModel.currentGameState = .overAndLoss
+    }
+
+    func showAllMines() {
+        for mineButtons in minesButtonsHolder {
+            mineButtons.showImage(with: "skull")
+        }
+    }
+
+    func showAlert(with message: String) {
+        let alertController = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
 }

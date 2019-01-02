@@ -37,6 +37,7 @@ class TopHeaderView: UIView {
         static let verticalPadding: CGFloat = 8.0
         static let defaultFieldWidth: CGFloat = 50.0
         static let defaultViewHeight: CGFloat = 50.0
+        static let verticalCenterOffset: CGFloat = 1.0
     }
 
     let scoreLabel = UILabel(frame: .zero)
@@ -112,11 +113,11 @@ extension TopHeaderView: ViewsCustomizable {
             self.scoreLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: TopHeaderView.Constants.defaultFieldWidth),
             self.gridSizeInputField.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.defaultFieldWidth),
             self.resetButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.defaultFieldWidth),
-            self.revealButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.defaultFieldWidth)
+            self.revealButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.defaultFieldWidth),
+            gridSizeInputField.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: Constants.verticalCenterOffset)
             ])
 
         scoreLabel.verticallyConstrainTo(parentView: self, padding: Constants.verticalPadding)
-        gridSizeInputField.verticallyConstrainTo(parentView: self, padding: Constants.verticalPadding)
         resetButton.verticallyConstrainTo(parentView: self, padding: Constants.verticalPadding)
         revealButton.verticallyConstrainTo(parentView: self, padding: Constants.verticalPadding)
     }
@@ -132,12 +133,13 @@ extension TopHeaderView: ViewsCustomizable {
         toolbar.items = toolbarItems
         gridSizeInputField.text = String(self.viewModel.gridSize)
         gridSizeInputField.inputAccessoryView = toolbar
+        gridSizeInputField.autocorrectionType = .no
+        gridSizeInputField.keyboardType = .numberPad
 
         resetButton.setTitle("Reset", for: .normal)
         resetButton.addTarget(self, action: #selector(resetButtonPressed), for: .touchUpInside)
 
         revealButton.setTitle("Reveal", for: .normal)
-        revealButton.addTarget(self, action: #selector(resetButtonPressed), for: .touchUpInside)
-
+        revealButton.addTarget(self, action: #selector(revealButtonPressed), for: .touchUpInside)
     }
 }

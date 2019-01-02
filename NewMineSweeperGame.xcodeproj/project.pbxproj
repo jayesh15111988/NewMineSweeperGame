@@ -18,6 +18,8 @@
 		E3BB619621DC126000888202 /* NeighboringTilesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB619521DC126000888202 /* NeighboringTilesProvider.swift */; };
 		E3BB619921DC1FF700888202 /* MineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB619821DC1FF700888202 /* MineButton.swift */; };
 		E3BB619B21DC331300888202 /* ScrollViewAutolayoutCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB619A21DC331300888202 /* ScrollViewAutolayoutCreator.swift */; };
+		E3BB619D21DC636800888202 /* skull.png in Resources */ = {isa = PBXBuildFile; fileRef = E3BB619C21DC636800888202 /* skull.png */; };
+		E3BB619F21DC680A00888202 /* mine.png in Resources */ = {isa = PBXBuildFile; fileRef = E3BB619E21DC680A00888202 /* mine.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +48,8 @@
 		E3BB619521DC126000888202 /* NeighboringTilesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighboringTilesProvider.swift; sourceTree = "<group>"; };
 		E3BB619821DC1FF700888202 /* MineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineButton.swift; sourceTree = "<group>"; };
 		E3BB619A21DC331300888202 /* ScrollViewAutolayoutCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewAutolayoutCreator.swift; sourceTree = "<group>"; };
+		E3BB619C21DC636800888202 /* skull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skull.png; sourceTree = "<group>"; };
+		E3BB619E21DC680A00888202 /* mine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mine.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +111,8 @@
 		E3BB615A21DBBC8800888202 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				E3BB619C21DC636800888202 /* skull.png */,
+				E3BB619E21DC680A00888202 /* mine.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -256,7 +262,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3BB619F21DC680A00888202 /* mine.png in Resources */,
 				E3BB615321DBBC5500888202 /* LaunchScreen.storyboard in Resources */,
+				E3BB619D21DC636800888202 /* skull.png in Resources */,
 				E3BB615021DBBC5500888202 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

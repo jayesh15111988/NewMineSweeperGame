@@ -14,6 +14,20 @@ class MineButton: UIButton {
         case selected
         case notSelected
         case questionMark
+        case revealed
+
+        func color() -> UIColor {
+            switch self {
+            case .selected:
+                return .blue
+            case .notSelected:
+                return .red
+            case .questionMark:
+                return .white
+            case .revealed:
+                return .green
+            }
+        }
     }
 
     struct StateViewModel {
@@ -21,7 +35,13 @@ class MineButton: UIButton {
         var state: MineButtonstate
         let numberOfSurroundingMines: Int
         var sequenceOfSurroundingTiles: [Int]
-        var isVisited: Bool
+        var isVisited: Bool {
+            didSet {
+                if isVisited {
+                    self.state = .selected
+                }
+            }
+        }
     }
 
     let sequenceNumber: Int
@@ -29,6 +49,7 @@ class MineButton: UIButton {
     var stateViewModel: StateViewModel
     var tileSelectedClosure: ((Int) -> Void)?
     var gameOverClosure: (() -> Void)?
+    let overlayImageView = UIImageView(frame: .zero)
 
     init(position: CGPoint, dimension: CGFloat, isMine: Bool, sequenceNumber: Int, numberOfSurroundingMines: Int) {
         self.sequenceNumber = sequenceNumber
@@ -36,23 +57,34 @@ class MineButton: UIButton {
 
         self.stateViewModel = StateViewModel(isMine: isMine, state: .notSelected, numberOfSurroundingMines: numberOfSurroundingMines, sequenceOfSurroundingTiles: [], isVisited: false)
 
-
-
-
         super.init(frame: CGRect(x: position.x, y: position.y, width: dimension, height: dimension))
         self.configureButton(with: numberOfSurroundingMines)
+        self.configureOverlayImageView(with: dimension)
+        self.updateBackgroundColor()
+    }
+
+    func configureOverlayImageView(with dimension: CGFloat) {
+        self.addSubview(self.overlayImageView)
+        self.overlayImageView.frame = CGRect(x: 0, y: 0, width: dimension, height: dimension)
+        self.overlayImageView.alpha = 0.0
+        self.overlayImageView.image = UIImage(named: "skull")
     }
 
     func configureButton(with numberOfNeighboringMines: Int) {
         let titleColor: UIColor
 
-        if numberOfSurroundingMines == 1 {
-            titleColor = .white
-        } else if numberOfNeighboringMines < 4 {
+        if stateViewModel.state == .questionMark {
             titleColor = .orange
         } else {
-            titleColor = .red
+            if numberOfSurroundingMines == 1 {
+                titleColor = .white
+            } else if numberOfNeighboringMines < 4 {
+                titleColor = .orange
+            } else {
+                titleColor = .red
+            }
         }
+
         self.setTitleColor(titleColor, for: .normal)
         self.addTarget(self, action: #selector(tileButtonSelected), for: .touchUpInside)
     }
@@ -66,6 +98,20 @@ class MineButton: UIButton {
                 self.tileSelectedClosure?(sequenceNumber)
             }
         }
+    }
+
+    func showImage(with imageName: String) {
+        self.overlayImageView.image = UIImage(named: imageName)
+        self.overlayImageView.alpha = 1.0
+    }
+
+    func hideImage() {
+        self.overlayImageView.image = nil
+        self.overlayImageView.alpha = 0.0
+    }
+
+    func updateBackgroundColor() {
+        self.backgroundColor = self.stateViewModel.state.color()
     }
 
     required init?(coder aDecoder: NSCoder) {
