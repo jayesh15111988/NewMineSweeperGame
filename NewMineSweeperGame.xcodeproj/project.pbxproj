@@ -15,6 +15,9 @@
 		E3BB616521DBBE4800888202 /* TopHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB616421DBBE4800888202 /* TopHeaderView.swift */; };
 		E3BB616D21DBBE8B00888202 /* NewMineSweeperGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB616C21DBBE8B00888202 /* NewMineSweeperGameTests.swift */; };
 		E3BB617521DBC73600888202 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB617421DBC73600888202 /* UIView+Extension.swift */; };
+		E3BB619621DC126000888202 /* NeighboringTilesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB619521DC126000888202 /* NeighboringTilesProvider.swift */; };
+		E3BB619921DC1FF700888202 /* MineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB619821DC1FF700888202 /* MineButton.swift */; };
+		E3BB619B21DC331300888202 /* ScrollViewAutolayoutCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB619A21DC331300888202 /* ScrollViewAutolayoutCreator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,9 @@
 		E3BB616C21DBBE8B00888202 /* NewMineSweeperGameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMineSweeperGameTests.swift; sourceTree = "<group>"; };
 		E3BB616E21DBBE8B00888202 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3BB617421DBC73600888202 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		E3BB619521DC126000888202 /* NeighboringTilesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighboringTilesProvider.swift; sourceTree = "<group>"; };
+		E3BB619821DC1FF700888202 /* MineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineButton.swift; sourceTree = "<group>"; };
+		E3BB619A21DC331300888202 /* ScrollViewAutolayoutCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewAutolayoutCreator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +87,7 @@
 		E3BB614721DBBC5300888202 /* NewMineSweeperGame */ = {
 			isa = PBXGroup;
 			children = (
+				E3BB619721DC1F8400888202 /* Button */,
 				E3BB616221DBBE2D00888202 /* View */,
 				E3BB615F21DBBCF800888202 /* Screens */,
 				E3BB615E21DBBCC400888202 /* Utilities */,
@@ -121,6 +128,7 @@
 		E3BB615D21DBBCB700888202 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E3BB617421DBC73600888202 /* UIView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -128,7 +136,8 @@
 		E3BB615E21DBBCC400888202 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				E3BB617421DBC73600888202 /* UIView+Extension.swift */,
+				E3BB619521DC126000888202 /* NeighboringTilesProvider.swift */,
+				E3BB619A21DC331300888202 /* ScrollViewAutolayoutCreator.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -156,6 +165,14 @@
 				E3BB616E21DBBE8B00888202 /* Info.plist */,
 			);
 			path = NewMineSweeperGameTests;
+			sourceTree = "<group>";
+		};
+		E3BB619721DC1F8400888202 /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				E3BB619821DC1FF700888202 /* MineButton.swift */,
+			);
+			path = Button;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,10 +276,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3BB614B21DBBC5300888202 /* ViewController.swift in Sources */,
+				E3BB619921DC1FF700888202 /* MineButton.swift in Sources */,
 				E3BB616521DBBE4800888202 /* TopHeaderView.swift in Sources */,
 				E3BB614921DBBC5300888202 /* AppDelegate.swift in Sources */,
 				E3BB617521DBC73600888202 /* UIView+Extension.swift in Sources */,
 				E3BB616121DBBD5B00888202 /* GameHomePageViewController.swift in Sources */,
+				E3BB619621DC126000888202 /* NeighboringTilesProvider.swift in Sources */,
+				E3BB619B21DC331300888202 /* ScrollViewAutolayoutCreator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
