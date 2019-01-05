@@ -60,24 +60,6 @@ class TopHeaderView: UIView {
     }
 }
 
-extension TopHeaderView {
-    @objc func gridSizeChanged() {
-        if let inputText = gridSizeInputField.text, let gridSize = Int(inputText) {
-            self.gridSizeInputField.resignFirstResponder()
-            self.viewModel.gridSize = gridSize
-            self.viewModel.changeGridSizeButtonActionClosure?(gridSize)
-        }
-    }
-
-    @objc func resetButtonPressed() {
-        self.viewModel.resetButtonActionClosure?()
-    }
-
-    @objc func revealButtonPressed() {
-        self.viewModel.revealButtonActionClosure?(self.viewModel.isRevealing)        
-    }
-}
-
 extension TopHeaderView: ViewsCustomizable {
     func layoutCustomViews() {
         self.addSubview(scoreLabel)
@@ -116,12 +98,13 @@ extension TopHeaderView: ViewsCustomizable {
         let toolbar = UIToolbar(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: self.frame.width, height: Constants.defaultViewHeight)))
         var toolbarItems: [UIBarButtonItem] = []
         toolbarItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        toolbarItems.append(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(gridSizeChanged)))
+        toolbarItems.append(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(gridSizeUpdateDoneButtonPressed)))
         toolbar.items = toolbarItems
         gridSizeInputField.inputAccessoryView = toolbar
         gridSizeInputField.autocorrectionType = .no
         gridSizeInputField.keyboardType = .numberPad
         gridSizeInputField.text = "\(viewModel.gridSize)"
+        gridSizeInputField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
 
         resetButton.setTitle("Reset", for: .normal)
         resetButton.addTarget(self, action: #selector(resetButtonPressed), for: .touchUpInside)
@@ -142,5 +125,32 @@ extension TopHeaderView: ViewsCustomizable {
 
     func updateRevealStatus(value: Bool) {
         self.viewModel.isRevealing = value
+    }
+}
+
+extension TopHeaderView {
+    @objc func gridSizeChanged(newSize: Int) {
+        self.viewModel.gridSize = newSize
+        self.viewModel.changeGridSizeButtonActionClosure?(newSize)
+    }
+
+    @objc func resetButtonPressed() {
+        self.viewModel.resetButtonActionClosure?()
+    }
+
+    @objc func revealButtonPressed() {
+        self.viewModel.revealButtonActionClosure?(self.viewModel.isRevealing)
+    }
+
+    @objc func textFieldDidChange(textField: UITextField) {
+        if let inputText = gridSizeInputField.text, let gridSize = Int(inputText) {
+            gridSizeChanged(newSize: gridSize)
+        }
+    }
+
+    @objc func gridSizeUpdateDoneButtonPressed() {
+        if gridSizeInputField.isFirstResponder {
+            self.gridSizeInputField.resignFirstResponder()
+        }
     }
 }

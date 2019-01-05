@@ -44,9 +44,11 @@ class GameHomePageViewController: UIViewController {
     struct ViewModel {
 
         let tileWidth: Double
-        let totalTilesInRow: Int
+        var totalTilesInRow: Int
         let gutterSpacing: Double
-        let totalNumberOfMines: Int
+        var totalNumberOfMines: Int {
+            return Int(0.25 * Double(totalNumberOfTilesOnScreen()))
+        }
         var currentGameState: GameState
         var totalNumberOfTilesRevealed: Int
         var currentScoreValue: Int
@@ -68,7 +70,7 @@ class GameHomePageViewController: UIViewController {
     }
 
     let gridHolderView = UIView(frame: .zero)
-    var viewModel = ViewModel(tileWidth: GameStateConstants.tileWidth, totalTilesInRow: GameStateConstants.totalTilesInRow, gutterSpacing: GameStateConstants.gutterSpacing, totalNumberOfMines: GameStateConstants.totalNumberOfMines, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0, isRevealing: true)
+    var viewModel = ViewModel(tileWidth: GameStateConstants.tileWidth, totalTilesInRow: GameStateConstants.totalTilesInRow, gutterSpacing: GameStateConstants.gutterSpacing, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0, isRevealing: true)
     var minesLocationHolder: [Int: Bool] = [:]
     var numberOfSurroundingMinesHolder: [Int: Int] = [:]
 
@@ -89,7 +91,7 @@ private extension GameHomePageViewController {
         var topHeaderViewModel = TopHeaderView.ViewModel(score: viewModel.currentScoreValue, gridSize: viewModel.totalTilesInRow, isRevealing: true)
 
         topHeaderViewModel.changeGridSizeButtonActionClosure = { [weak self] newGridSize in
-            print(self.debugDescription)
+            self?.viewModel.totalTilesInRow = newGridSize
         }
 
         topHeaderViewModel.resetButtonActionClosure = { [weak self] in
@@ -190,23 +192,35 @@ extension GameHomePageViewController {
 
         let totalGridViewHeight = viewModel.gridDimension()
 
-        let scrollViewAutoLayout = ScrollViewAutolayoutCreator(parentView: self.view)
-        scrollViewAutoLayout.contentView.addSubview(topHeaderView)
+        let parentContentView = UIView()
+        parentContentView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(parentContentView)
+        self.view.addSubview(topHeaderView)
+
+        let viewsDictionary = ["gridHolderView": gridHolderView, "topHeaderView": topHeaderView!, "parentContentView": parentContentView]
+        let metrics = ["totalGridViewHeight": totalGridViewHeight]
+
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[parentContentView]|", options: [], metrics: metrics, views: viewsDictionary))
+        NSLayoutConstraint.activate([
+            topHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
+            topHeaderView.heightAnchor.constraint(equalToConstant: 44.0),
+            topHeaderView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 8.0),
+            topHeaderView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0.0)
+            ])
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[topHeaderView]-[parentContentView]-|", options: [], metrics: metrics, views: viewsDictionary))
+
+
+        let scrollViewAutoLayout = ScrollViewAutolayoutCreator(parentView: parentContentView)
         scrollViewAutoLayout.contentView.addSubview(gridHolderView)
 
         //TODO: Replace it with Anchor constraints
 
-        let viewsDictionary = ["gridHolderView": gridHolderView, "topHeaderView": topHeaderView!]
-        let metrics = ["totalGridViewHeight": totalGridViewHeight]
-
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[topHeaderView(44)]-[gridHolderView(totalGridViewHeight)]-20-|", options: [], metrics: metrics, views: viewsDictionary))
-
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[topHeaderView]-|", options: [], metrics: metrics, views: viewsDictionary))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[gridHolderView(totalGridViewHeight)]-20-|", options: [], metrics: metrics, views: viewsDictionary))
 
         if CGFloat(totalGridViewHeight) > self.view.frame.width {
             self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[gridHolderView(totalGridViewHeight)]-44-|", options: [], metrics: metrics, views: viewsDictionary))
         } else {
-            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[gridHolderView(totalGridViewHeight)]", options: [], metrics: metrics, views: viewsDictionary))
+            self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[gridHolderView(totalGridViewHeight)]-44-|", options: [], metrics: metrics, views: viewsDictionary))
         }
     }
 
@@ -260,7 +274,6 @@ extension GameHomePageViewController {
                 minesLocationHolder[generateRandomMinesSequence] = true
             }
         }
-
     }
 
     func populateNumberOfSurroundingMinesForTile(with minesTileSequenceNumber: Int) {
@@ -305,12 +318,14 @@ extension GameHomePageViewController {
         resetViewModel()
         resetConstraints()
         createNewGridOnScreen()
+        topHeaderView.updateScore(value: self.viewModel.currentScoreValue)
     }
 
     func resetViewModel() {
         self.viewModel.currentGameState = .notStarted
         self.viewModel.totalNumberOfTilesRevealed = 0
         self.viewModel.currentScoreValue = 0
+        self.viewModel.isRevealing = true
     }
 
     func resetConstraints() {

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E3BB614921DBBC5300888202 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB614821DBBC5300888202 /* AppDelegate.swift */; };
-		E3BB614B21DBBC5300888202 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB614A21DBBC5300888202 /* ViewController.swift */; };
 		E3BB615021DBBC5500888202 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3BB614F21DBBC5500888202 /* Assets.xcassets */; };
 		E3BB615321DBBC5500888202 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3BB615121DBBC5500888202 /* LaunchScreen.storyboard */; };
 		E3BB616121DBBD5B00888202 /* GameHomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3BB616021DBBD5B00888202 /* GameHomePageViewController.swift */; };
@@ -35,7 +34,6 @@
 /* Begin PBXFileReference section */
 		E3BB614521DBBC5300888202 /* NewMineSweeperGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewMineSweeperGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3BB614821DBBC5300888202 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E3BB614A21DBBC5300888202 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E3BB614F21DBBC5500888202 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E3BB615221DBBC5500888202 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E3BB615421DBBC5500888202 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,11 +94,8 @@
 				E3BB615F21DBBCF800888202 /* Screens */,
 				E3BB615E21DBBCC400888202 /* Utilities */,
 				E3BB615D21DBBCB700888202 /* Extensions */,
-				E3BB615C21DBBCAC00888202 /* Models */,
-				E3BB615B21DBBC9C00888202 /* CustomCells */,
 				E3BB615A21DBBC8800888202 /* Images */,
 				E3BB614821DBBC5300888202 /* AppDelegate.swift */,
-				E3BB614A21DBBC5300888202 /* ViewController.swift */,
 				E3BB614F21DBBC5500888202 /* Assets.xcassets */,
 				E3BB615121DBBC5500888202 /* LaunchScreen.storyboard */,
 				E3BB615421DBBC5500888202 /* Info.plist */,
@@ -115,20 +110,6 @@
 				E3BB619E21DC680A00888202 /* mine.png */,
 			);
 			path = Images;
-			sourceTree = "<group>";
-		};
-		E3BB615B21DBBC9C00888202 /* CustomCells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CustomCells;
-			sourceTree = "<group>";
-		};
-		E3BB615C21DBBCAC00888202 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		E3BB615D21DBBCB700888202 /* Extensions */ = {
@@ -283,7 +264,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3BB614B21DBBC5300888202 /* ViewController.swift in Sources */,
 				E3BB619921DC1FF700888202 /* MineButton.swift in Sources */,
 				E3BB616521DBBE4800888202 /* TopHeaderView.swift in Sources */,
 				E3BB614921DBBC5300888202 /* AppDelegate.swift in Sources */,
