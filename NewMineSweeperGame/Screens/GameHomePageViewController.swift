@@ -14,6 +14,8 @@ class GameHomePageViewController: UIViewController {
         static let horizontalPadding: CGFloat = 10.0
         static let verticalPadding: CGFloat = 8.0
         static let defaultViewHeight: CGFloat = 50.0
+        static let gridCornerRadius: CGFloat = 10.0
+        static let gridWidth: CGFloat = 2.0
     }
 
     enum GameState {
@@ -122,8 +124,8 @@ extension GameHomePageViewController: ViewsCustomizable {
         gridHolderView.translatesAutoresizingMaskIntoConstraints = false
         gridHolderView.backgroundColor = .black
         gridHolderView.clipsToBounds = true
-        gridHolderView.layer.cornerRadius = 10.0
-        gridHolderView.layer.borderWidth = 2.0
+        gridHolderView.layer.cornerRadius = Constants.gridCornerRadius
+        gridHolderView.layer.borderWidth = Constants.gridWidth
         gridHolderView.layer.borderColor = UIColor.black.cgColor
         self.createNewGridOnScreen()
     }
@@ -321,6 +323,7 @@ extension GameHomePageViewController {
         resetConstraints()
         createNewGridOnScreen()
         topHeaderView.updateScore(value: self.viewModel.currentScoreValue)
+        topHeaderView.updateGridSize(value: self.viewModel.totalTilesInRow)
     }
 
     func resetViewModel() {

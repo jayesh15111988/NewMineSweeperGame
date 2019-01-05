@@ -61,6 +61,7 @@ class MineButton: UIButton {
         super.init(frame: CGRect(x: position.x, y: position.y, width: dimension, height: dimension))
         self.updateAppearance()
         self.configureOverlayImageView(with: dimension)
+        self.addTarget(self, action: #selector(tileButtonSelected), for: .touchUpInside)
     }
 
     func configureOverlayImageView(with dimension: CGFloat) {
@@ -119,7 +120,6 @@ class MineButton: UIButton {
         }
 
         self.setTitleColor(titleColor, for: .normal)
-        self.addTarget(self, action: #selector(tileButtonSelected), for: .touchUpInside)
     }
 
     required init?(coder aDecoder: NSCoder) {

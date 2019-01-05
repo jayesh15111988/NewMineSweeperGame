@@ -14,18 +14,18 @@ class NeighboringTilesProvider {
         let row = minesTileSequenceNumber / totalNumberOfTilesInRow
         let col = minesTileSequenceNumber % totalNumberOfTilesInRow
 
-        let resultantNeightbors = [[col - 1, row - 1],
-                                            [col, row - 1],
-                                            [col + 1, row - 1],
-                                            [col - 1, row],
-                                            [col + 1, row],
-                                            [col - 1, row + 1],
-                                            [col, row + 1],
-                                            [col + 1, row + 1]
+        let resultantNeighbors = [Coordinate(row: row - 1, column: col - 1),
+                                  Coordinate(row: row - 1, column: col),
+                                  Coordinate(row: row - 1, column: col + 1),
+                                  Coordinate(row: row, column: col - 1),
+                                  Coordinate(row: row, column: col + 1),
+                                  Coordinate(row: row + 1, column: col - 1),
+                                  Coordinate(row: row + 1, column: col),
+                                  Coordinate(row: row + 1, column: col + 1)
             ].filter { $0.isCoordinateInGivenRange(low: 0, high: totalNumberOfTilesInRow - 1) }
 
-        let result = resultantNeightbors.compactMap { value -> Int in
-            return value[1] * totalNumberOfTilesInRow + value[0]
+        let result = resultantNeighbors.compactMap { value -> Int in
+            return value.row * totalNumberOfTilesInRow + value.column
         }
 
         return result
@@ -38,8 +38,11 @@ extension Int {
     }
 }
 
-extension Array where Element == Int {
+struct Coordinate {
+    let row: Int
+    let column: Int
+
     func isCoordinateInGivenRange(low: Int, high: Int) -> Bool {
-        return self[0].isInTheInclusiveRange(low: low, high: high) && self[1].isInTheInclusiveRange(low: low, high: high)
+        return self.row.isInTheInclusiveRange(low: low, high: high) && self.column.isInTheInclusiveRange(low: low, high: high)
     }
 }

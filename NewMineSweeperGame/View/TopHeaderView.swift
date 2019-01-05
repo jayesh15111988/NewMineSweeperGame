@@ -37,6 +37,7 @@ class TopHeaderView: UIView {
         static let defaultFieldWidth: CGFloat = 50.0
         static let defaultViewHeight: CGFloat = 50.0
         static let verticalCenterOffset: CGFloat = 1.0
+        static let minimumGridSize = 3
     }
 
     let scoreLabel = UILabel(frame: .zero)
@@ -130,6 +131,9 @@ extension TopHeaderView: ViewsCustomizable {
 
 extension TopHeaderView {
     @objc func gridSizeChanged(newSize: Int) {
+        guard newSize >= Constants.minimumGridSize else {
+            return
+        }
         self.viewModel.gridSize = newSize
         self.viewModel.changeGridSizeButtonActionClosure?(newSize)
     }
