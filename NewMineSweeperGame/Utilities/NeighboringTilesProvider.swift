@@ -11,39 +11,35 @@ import Foundation
 class NeighboringTilesProvider {
     class func neighboringTilesForGivenMineTile(with minesTileSequenceNumber: Int, totalNumberOfTilesInRow: Int) -> [Int] {
 
-        var resultantNeightbors: [Int] = []
+        let row = minesTileSequenceNumber / totalNumberOfTilesInRow
+        let col = minesTileSequenceNumber % totalNumberOfTilesInRow
 
-        let topRightCorner = totalNumberOfTilesInRow - 1;
-        let bottomLeftCorner = totalNumberOfTilesInRow * topRightCorner
+        let resultantNeightbors = [[col - 1, row - 1],
+                                            [col, row - 1],
+                                            [col + 1, row - 1],
+                                            [col - 1, row],
+                                            [col + 1, row],
+                                            [col - 1, row + 1],
+                                            [col, row + 1],
+                                            [col + 1, row + 1]
+            ].filter { $0.isCoordinateInGivenRange(low: 0, high: totalNumberOfTilesInRow - 1) }
 
-        if (minesTileSequenceNumber == 0) {
-        resultantNeightbors = [minesTileSequenceNumber + 1, minesTileSequenceNumber + totalNumberOfTilesInRow, minesTileSequenceNumber + totalNumberOfTilesInRow + 1]
-        } else if (minesTileSequenceNumber == topRightCorner) {
-        resultantNeightbors = [minesTileSequenceNumber - 1, minesTileSequenceNumber + totalNumberOfTilesInRow - 1, minesTileSequenceNumber + totalNumberOfTilesInRow]
-        } else if minesTileSequenceNumber == bottomLeftCorner {
-        resultantNeightbors = [minesTileSequenceNumber + 1, minesTileSequenceNumber - totalNumberOfTilesInRow + 1, minesTileSequenceNumber - totalNumberOfTilesInRow]
-        } else if minesTileSequenceNumber == topRightCorner + bottomLeftCorner {
-        resultantNeightbors = [minesTileSequenceNumber - 1, minesTileSequenceNumber - totalNumberOfTilesInRow - 1, minesTileSequenceNumber - totalNumberOfTilesInRow]
-        } else if (minesTileSequenceNumber < topRightCorner) {
-            // Top horizontal Row
-            resultantNeightbors = [minesTileSequenceNumber - 1, minesTileSequenceNumber + 1, minesTileSequenceNumber + totalNumberOfTilesInRow - 1, minesTileSequenceNumber + totalNumberOfTilesInRow + 1, minesTileSequenceNumber + totalNumberOfTilesInRow]
-
-        } else if ((minesTileSequenceNumber + 1) % totalNumberOfTilesInRow == 0) {
-            // Extreme right vertical row
-            resultantNeightbors = [minesTileSequenceNumber - 1, minesTileSequenceNumber + totalNumberOfTilesInRow, minesTileSequenceNumber + totalNumberOfTilesInRow - 1, minesTileSequenceNumber - totalNumberOfTilesInRow, minesTileSequenceNumber - totalNumberOfTilesInRow - 1]
-
-        } else if (minesTileSequenceNumber % totalNumberOfTilesInRow == 0) {
-            // Extreme left vertical row
-            resultantNeightbors = [minesTileSequenceNumber + 1, minesTileSequenceNumber - totalNumberOfTilesInRow, minesTileSequenceNumber - totalNumberOfTilesInRow + 1, minesTileSequenceNumber + totalNumberOfTilesInRow, minesTileSequenceNumber + totalNumberOfTilesInRow + 1]
-
-        } else if (minesTileSequenceNumber > bottomLeftCorner) {
-            // Bottom horizontal row
-            resultantNeightbors = [minesTileSequenceNumber - 1, minesTileSequenceNumber + 1, minesTileSequenceNumber - totalNumberOfTilesInRow - 1, minesTileSequenceNumber - totalNumberOfTilesInRow + 1, minesTileSequenceNumber - totalNumberOfTilesInRow]
-
-        } else {
-            // Any tile inside grid and not touching any adjacent boundary
-            resultantNeightbors = [minesTileSequenceNumber - 1, minesTileSequenceNumber + 1, minesTileSequenceNumber + totalNumberOfTilesInRow, minesTileSequenceNumber - totalNumberOfTilesInRow, minesTileSequenceNumber + totalNumberOfTilesInRow - 1, minesTileSequenceNumber + totalNumberOfTilesInRow + 1, minesTileSequenceNumber - totalNumberOfTilesInRow - 1, minesTileSequenceNumber - totalNumberOfTilesInRow + 1]
+        let result = resultantNeightbors.compactMap { value -> Int in
+            return value[1] * totalNumberOfTilesInRow + value[0]
         }
-        return resultantNeightbors;
+
+        return result
+    }
+}
+
+extension Int {
+    func isInTheInclusiveRange(low: Int, high: Int) -> Bool {
+        return self >= low && self <= high
+    }
+}
+
+extension Array where Element == Int {
+    func isCoordinateInGivenRange(low: Int, high: Int) -> Bool {
+        return self[0].isInTheInclusiveRange(low: low, high: high) && self[1].isInTheInclusiveRange(low: low, high: high)
     }
 }

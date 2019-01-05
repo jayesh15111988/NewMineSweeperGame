@@ -26,14 +26,17 @@ class GameHomePageViewController: UIViewController {
 
     enum GameStateConstants {
         static let tileWidth: Double = 50.0
-        static let totalTilesInRow = 5
+        static let totalTilesInRow = 3
         static let gutterSpacing: Double = 5.0
         static let totalNumberOfMines = 5
     }
 
     var topHeaderView: TopHeaderView!
 
-    init() {
+    var viewModel: ViewModel
+
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -70,7 +73,6 @@ class GameHomePageViewController: UIViewController {
     }
 
     let gridHolderView = UIView(frame: .zero)
-    var viewModel = ViewModel(tileWidth: GameStateConstants.tileWidth, totalTilesInRow: GameStateConstants.totalTilesInRow, gutterSpacing: GameStateConstants.gutterSpacing, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0, isRevealing: true)
     var minesLocationHolder: [Int: Bool] = [:]
     var numberOfSurroundingMinesHolder: [Int: Int] = [:]
 
@@ -326,6 +328,7 @@ extension GameHomePageViewController {
         self.viewModel.totalNumberOfTilesRevealed = 0
         self.viewModel.currentScoreValue = 0
         self.viewModel.isRevealing = true
+        topHeaderView.updateRevealStatus(value: self.viewModel.isRevealing)
     }
 
     func resetConstraints() {
