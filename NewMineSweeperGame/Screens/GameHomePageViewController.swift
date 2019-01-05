@@ -16,16 +16,19 @@ class GameHomePageViewController: UIViewController {
         static let defaultViewHeight: CGFloat = 50.0
     }
 
-    enum GameStateConstants {
-        
-    }
-
     enum GameState {
         case notStarted
         case inProgress
         case overAndWin
         case overAndLoss
         case busy
+    }
+
+    enum GameStateConstants {
+        static let tileWidth: Double = 50.0
+        static let totalTilesInRow = 5
+        static let gutterSpacing: Double = 5.0
+        static let totalNumberOfMines = 5
     }
 
     var topHeaderView: TopHeaderView!
@@ -47,6 +50,7 @@ class GameHomePageViewController: UIViewController {
         var currentGameState: GameState
         var totalNumberOfTilesRevealed: Int
         var currentScoreValue: Int
+        var isRevealing: Bool
 
         // Represents both height and width
         func gridDimension() -> Int {
@@ -64,7 +68,7 @@ class GameHomePageViewController: UIViewController {
     }
 
     let gridHolderView = UIView(frame: .zero)
-    var viewModel = ViewModel(tileWidth: 50, totalTilesInRow: 5, gutterSpacing: 5, totalNumberOfMines: 5, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0)
+    var viewModel = ViewModel(tileWidth: GameStateConstants.tileWidth, totalTilesInRow: GameStateConstants.totalTilesInRow, gutterSpacing: GameStateConstants.gutterSpacing, totalNumberOfMines: GameStateConstants.totalNumberOfMines, currentGameState: .notStarted, totalNumberOfTilesRevealed: 0, currentScoreValue: 0, isRevealing: true)
     var minesLocationHolder: [Int: Bool] = [:]
     var numberOfSurroundingMinesHolder: [Int: Int] = [:]
 
@@ -82,33 +86,26 @@ class GameHomePageViewController: UIViewController {
 
 private extension GameHomePageViewController {
     func makeHeaderViewModel() -> TopHeaderView.ViewModel {
-        var topHeaderViewModel = TopHeaderView.ViewModel(score: 0, gridSize: 10, isRevealing: true)
+        var topHeaderViewModel = TopHeaderView.ViewModel(score: viewModel.currentScoreValue, gridSize: viewModel.totalTilesInRow, isRevealing: true)
 
         topHeaderViewModel.changeGridSizeButtonActionClosure = { [weak self] newGridSize in
             print(self.debugDescription)
         }
 
         topHeaderViewModel.resetButtonActionClosure = { [weak self] in
-            print(self.debugDescription)
+            self?.resetGame()
         }
 
-        topHeaderViewModel.revealButtonActionClosure = { [weak self] isRevealing in
-            self?.toggleMinesDisplayState(isRevealing: isRevealing)
+        topHeaderViewModel.revealButtonActionClosure = { [weak self] toShow in
+            self?.toggleMinesDisplayState(toShow: toShow)
         }
         return topHeaderViewModel
     }
 
-    func toggleMinesDisplayState(isRevealing: Bool) {
-        for mineTile in minesButtonsHolder {
-            if isRevealing {
-                mineTile.stateViewModel.state = .revealed
-                mineTile.showImage(with: "mine")
-            } else {
-                mineTile.stateViewModel.state = .notSelected
-                mineTile.hideImage()
-            }
-            mineTile.updateBackgroundColor()
-        }
+    func toggleMinesDisplayState(toShow: Bool) {
+        self.viewModel.isRevealing = !self.viewModel.isRevealing
+        minesButtonsHolder.forEach { $0.toggleMineVisibility(toShow: toShow) }
+        topHeaderView.updateRevealStatus(value: self.viewModel.isRevealing)
     }
 }
 
@@ -132,6 +129,7 @@ extension GameHomePageViewController {
 
     func createNewGridOnScreen() {
         populateMinesHolder(with: viewModel.totalTilesInRow)
+
         let gridDimension = viewModel.gridDimension()
 
         var buttonSequenceNumber = 0
@@ -154,16 +152,15 @@ extension GameHomePageViewController {
 
                 totalNumberOfMinesSurroundingGivenTile = self.numberOfSurroundingMinesHolder[buttonSequenceNumber] ?? 0
 
-                let tileButton = MineButton(position: CGPoint(x: xPosition, y: yPosition), dimension: CGFloat(viewModel.tileWidth), isMine: doesMineExistForTile, sequenceNumber: buttonSequenceNumber, numberOfSurroundingMines: totalNumberOfMinesSurroundingGivenTile)
-
-                tileButton.stateViewModel.sequenceOfSurroundingTiles = NeighboringTilesProvider.neighboringTilesForGivenMineTile(with: buttonSequenceNumber, totalNumberOfTilesInRow: viewModel.totalTilesInRow)
+                let tileButton = MineButton(position: CGPoint(x: xPosition, y: yPosition), dimension: CGFloat(viewModel.tileWidth), isMine: doesMineExistForTile, sequenceNumber: buttonSequenceNumber, numberOfSurroundingMines: totalNumberOfMinesSurroundingGivenTile, sequenceOfSurroundingTiles: NeighboringTilesProvider.neighboringTilesForGivenMineTile(with: buttonSequenceNumber, totalNumberOfTilesInRow: viewModel.totalTilesInRow))
 
                 tileButton.gameOverClosure = { [weak self] in
-                    //TODO: Show all mines
-                    self?.updateGameState()
-                    self?.showAllMines()
-                    self?.showAlert(with: "You clicked on mine and now game is over")
-                    print(self.debugDescription)
+                    guard let strongSelf = self else { return }
+                    strongSelf.updateGameState()
+                    strongSelf.showAllMines()
+                    strongSelf.showAlert(with: "You clicked on mine and now game is over", completion: {
+                        strongSelf.resetGame()
+                    })
                 }
 
                 tileButton.tileSelectedClosure = { [weak self] sequence in
@@ -197,10 +194,10 @@ extension GameHomePageViewController {
         scrollViewAutoLayout.contentView.addSubview(topHeaderView)
         scrollViewAutoLayout.contentView.addSubview(gridHolderView)
 
+        //TODO: Replace it with Anchor constraints
+
         let viewsDictionary = ["gridHolderView": gridHolderView, "topHeaderView": topHeaderView!]
         let metrics = ["totalGridViewHeight": totalGridViewHeight]
-
-        //TODO: Replace it with Anchor constraints
 
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[topHeaderView(44)]-[gridHolderView(totalGridViewHeight)]-20-|", options: [], metrics: metrics, views: viewsDictionary))
 
@@ -214,51 +211,33 @@ extension GameHomePageViewController {
     }
 
     @objc func longPressGesturePressHandler(with gesture: UIGestureRecognizer) {
-        guard gesture.state == .ended, let tileButton = gesture.view as? MineButton, tileButton.stateViewModel.state != .selected else { return }
-
-        let currentState = tileButton.stateViewModel.state
-
-        if currentState == .questionMark {
-            tileButton.stateViewModel.state = .notSelected
-        } else {
-            tileButton.stateViewModel.state = .questionMark
-        }
-        tileButton.updateBackgroundColor()
-
-        if tileButton.stateViewModel.state == .questionMark {
-            tileButton.setTitle("?", for: .normal)
-        } else {
-            tileButton.setTitle("", for: .normal)
-        }
+        guard gesture.state == .ended, let tileButton = gesture.view as? MineButton else { return }
+        tileButton.updateStateWithQuestionMark()
     }
 
     func highlightNeighboringButtons(with sequenceNumber: Int) {
-        guard let mineButton = regularButtonsHolder.first(where: { $0.sequenceNumber == sequenceNumber }) else { return }
+        guard let mineButton = regularButtonsHolder.first(where: { $0.stateViewModel.sequenceNumber == sequenceNumber }) else { return }
 
         if !mineButton.stateViewModel.isVisited {
             
             viewModel.totalNumberOfTilesRevealed = viewModel.totalNumberOfTilesRevealed + 1
             mineButton.stateViewModel.isVisited = true            
-            mineButton.updateBackgroundColor()
+            mineButton.updateAppearance()
 
             if mineButton.stateViewModel.numberOfSurroundingMines == 0 {
                 viewModel.currentScoreValue = viewModel.currentScoreValue + 1
-
-                let surroundingTilesSequence = mineButton.stateViewModel.sequenceOfSurroundingTiles
-
-                for sequence in surroundingTilesSequence {
-                    self.highlightNeighboringButtons(with: sequence)
-                }
+                mineButton.stateViewModel.sequenceOfSurroundingTiles.forEach { self.highlightNeighboringButtons(with: $0) }
             } else {
                 mineButton.setTitle("\(mineButton.stateViewModel.numberOfSurroundingMines)", for: .normal)
                 viewModel.currentScoreValue = viewModel.currentScoreValue + (1 * mineButton.stateViewModel.numberOfSurroundingMines)
             }
 
-            topHeaderView.updateScore(score: viewModel.currentScoreValue)
+            topHeaderView.updateScore(value: self.viewModel.currentScoreValue)
 
-            //TODO: Add additional logic to check if user has won
             if self.viewModel.didUserWinCurrentGame() {
-                print("You won")
+                self.showAlert(with: "You've won the game", completion: { [weak self] in
+                    self?.resetGame()
+                })
             }
         }
     }
@@ -274,18 +253,17 @@ extension GameHomePageViewController {
         let maximumTileNumber = viewModel.totalNumberOfTilesOnScreen()
 
         while (minesGeneratedSoFar < viewModel.totalNumberOfMines) {
-
             let generateRandomMinesSequence = Int.random(in: 0..<maximumTileNumber)
             if minesLocationHolder[generateRandomMinesSequence] == nil {
                 minesGeneratedSoFar = minesGeneratedSoFar + 1
-                self.neighboringCellsForGivenMine(with: generateRandomMinesSequence)
+                self.populateNumberOfSurroundingMinesForTile(with: generateRandomMinesSequence)
                 minesLocationHolder[generateRandomMinesSequence] = true
             }
         }
 
     }
 
-    func neighboringCellsForGivenMine(with minesTileSequenceNumber: Int) {
+    func populateNumberOfSurroundingMinesForTile(with minesTileSequenceNumber: Int) {
         let resultantNeightbors = NeighboringTilesProvider.neighboringTilesForGivenMineTile(with: minesTileSequenceNumber, totalNumberOfTilesInRow: viewModel.totalTilesInRow)
 
         for neighborSequence in resultantNeightbors {
@@ -305,14 +283,39 @@ extension GameHomePageViewController {
     }
 
     func showAllMines() {
-        for mineButtons in minesButtonsHolder {
-            mineButtons.showImage(with: "skull")
-        }
+        minesButtonsHolder.forEach { $0.showImage(with: ImageNames.skull) }
     }
 
-    func showAlert(with message: String) {
+    func showAlert(with message: String, completion: @escaping () -> Void) {
         let alertController = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            completion()
+        }))
         self.present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension GameHomePageViewController {
+    func resetGame() {
+        minesLocationHolder.removeAll()
+        numberOfSurroundingMinesHolder.removeAll()
+        minesButtonsHolder.removeAll()
+        regularButtonsHolder.removeAll()
+
+        resetViewModel()
+        resetConstraints()
+        createNewGridOnScreen()
+    }
+
+    func resetViewModel() {
+        self.viewModel.currentGameState = .notStarted
+        self.viewModel.totalNumberOfTilesRevealed = 0
+        self.viewModel.currentScoreValue = 0
+    }
+
+    func resetConstraints() {
+        gridHolderView.subviews.forEach { $0.removeFromSuperview() }
+        gridHolderView.removeFromSuperview()
+        topHeaderView.removeFromSuperview()
     }
 }

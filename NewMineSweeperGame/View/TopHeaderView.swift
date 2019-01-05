@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 protocol ViewsCustomizable {
     func layoutCustomViews()
     func configureCustomViews()
@@ -60,11 +59,6 @@ class TopHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-extension TopHeaderView {
-    func updateScore(score: Int) {
-        self.scoreLabel.text = "Score: \(score)"
-    }
-}
 
 extension TopHeaderView {
     @objc func gridSizeChanged() {
@@ -76,18 +70,11 @@ extension TopHeaderView {
     }
 
     @objc func resetButtonPressed() {
-        resetViewsState()
         self.viewModel.resetButtonActionClosure?()
     }
 
-    func resetViewsState() {
-        self.scoreLabel.text = "Score: 0"
-        self.gridSizeInputField.text = String(viewModel.gridSize)
-    }
-
     @objc func revealButtonPressed() {
-        self.viewModel.revealButtonActionClosure?(self.viewModel.isRevealing)
-        self.viewModel.isRevealing = !self.viewModel.isRevealing
+        self.viewModel.revealButtonActionClosure?(self.viewModel.isRevealing)        
     }
 }
 
@@ -123,23 +110,37 @@ extension TopHeaderView: ViewsCustomizable {
     }
 
     func configureCustomViews() {
-        self.scoreLabel.text = "Score: 0"
         self.scoreLabel.textAlignment = .left
+        self.scoreLabel.text = "Score: \(viewModel.score)"
 
         let toolbar = UIToolbar(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: self.frame.width, height: Constants.defaultViewHeight)))
         var toolbarItems: [UIBarButtonItem] = []
         toolbarItems.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
         toolbarItems.append(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(gridSizeChanged)))
         toolbar.items = toolbarItems
-        gridSizeInputField.text = String(self.viewModel.gridSize)
         gridSizeInputField.inputAccessoryView = toolbar
         gridSizeInputField.autocorrectionType = .no
         gridSizeInputField.keyboardType = .numberPad
+        gridSizeInputField.text = "\(viewModel.gridSize)"
 
         resetButton.setTitle("Reset", for: .normal)
         resetButton.addTarget(self, action: #selector(resetButtonPressed), for: .touchUpInside)
 
         revealButton.setTitle("Reveal", for: .normal)
         revealButton.addTarget(self, action: #selector(revealButtonPressed), for: .touchUpInside)
+    }
+
+    func updateScore(value: Int) {
+        self.viewModel.score = value
+        self.scoreLabel.text = "Score: \(value)"
+    }
+
+    func updateGridSize(value: Int) {
+        self.viewModel.gridSize = value
+        self.gridSizeInputField.text = "\(value)"
+    }
+
+    func updateRevealStatus(value: Bool) {
+        self.viewModel.isRevealing = value
     }
 }
