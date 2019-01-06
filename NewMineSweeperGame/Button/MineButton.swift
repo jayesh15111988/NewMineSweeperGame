@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum ImageNames: String {
+enum ImageName: String {
     case skull
     case mine
 }
@@ -64,36 +64,6 @@ class MineButton: UIButton {
         self.addTarget(self, action: #selector(tileButtonSelected), for: .touchUpInside)
     }
 
-    func configureOverlayImageView(with dimension: CGFloat) {
-        self.addSubview(self.overlayImageView)
-        self.overlayImageView.frame = CGRect(x: 0, y: 0, width: dimension, height: dimension)
-        self.overlayImageView.alpha = 0.0
-        self.overlayImageView.image = UIImage(named: ImageNames.skull.rawValue)
-    }
-
-    @objc func tileButtonSelected() {
-
-        if stateViewModel.isMine {
-            self.gameOverClosure?()
-            return
-        }
-
-        if stateViewModel.state != .selected {
-            stateViewModel.state = .selected
-            self.tileSelectedClosure?(self.stateViewModel.sequenceNumber)
-        }
-    }
-
-    func showImage(with imageName: ImageNames) {
-        self.overlayImageView.image = UIImage(named: imageName.rawValue)
-        self.overlayImageView.alpha = 1.0
-    }
-
-    func hideImage() {
-        self.overlayImageView.image = nil
-        self.overlayImageView.alpha = 0.0
-    }
-
     func updateAppearance() {
         updateBackgroundColor()
         configureButton()
@@ -122,6 +92,36 @@ class MineButton: UIButton {
         self.setTitleColor(titleColor, for: .normal)
     }
 
+    func configureOverlayImageView(with dimension: CGFloat) {
+        self.addSubview(self.overlayImageView)
+        self.overlayImageView.frame = CGRect(x: 0, y: 0, width: dimension, height: dimension)
+        self.overlayImageView.alpha = 0.0
+        self.overlayImageView.image = nil
+    }
+
+    @objc func tileButtonSelected() {
+
+        if stateViewModel.isMine {
+            self.gameOverClosure?()
+            return
+        }
+
+        if stateViewModel.state != .selected {
+            stateViewModel.state = .selected
+            self.tileSelectedClosure?(self.stateViewModel.sequenceNumber)
+        }
+    }
+
+    func showImage(with imageName: ImageName) {
+        self.overlayImageView.image = UIImage(named: imageName.rawValue)
+        self.overlayImageView.alpha = 1.0
+    }
+
+    func hideImage() {
+        self.overlayImageView.image = nil
+        self.overlayImageView.alpha = 0.0
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -131,7 +131,7 @@ extension MineButton {
     func toggleMineVisibility(toShow: Bool) {
         if toShow {
             self.stateViewModel.state = .revealed
-            self.showImage(with: ImageNames.mine)
+            self.showImage(with: ImageName.mine)
         } else {
             self.stateViewModel.state = .notSelected
             self.hideImage()

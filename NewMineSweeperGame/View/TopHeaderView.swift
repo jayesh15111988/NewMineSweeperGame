@@ -18,16 +18,14 @@ class TopHeaderView: UIView {
     struct ViewModel {
         var score: Int
         var gridSize: Int
-        var isRevealing: Bool
 
         var resetButtonActionClosure: (() -> Void)?
-        var revealButtonActionClosure: ((Bool) -> Void)?
+        var revealButtonActionClosure: (() -> Void)?
         var changeGridSizeButtonActionClosure: ((Int) -> Void)?
 
-        init(score: Int, gridSize: Int, isRevealing: Bool) {
+        init(score: Int, gridSize: Int) {
             self.score = score
             self.gridSize = gridSize
-            self.isRevealing = isRevealing
         }
     }
 
@@ -122,15 +120,11 @@ extension TopHeaderView: ViewsCustomizable {
     func updateGridSize(value: Int) {
         self.viewModel.gridSize = value
         self.gridSizeInputField.text = "\(value)"
-    }
-
-    func updateRevealStatus(value: Bool) {
-        self.viewModel.isRevealing = value
-    }
+    }    
 }
 
 extension TopHeaderView {
-    @objc func gridSizeChanged(newSize: Int) {
+    func gridSizeChanged(newSize: Int) {
         guard newSize >= Constants.minimumGridSize else {
             return
         }
@@ -143,11 +137,11 @@ extension TopHeaderView {
     }
 
     @objc func revealButtonPressed() {
-        self.viewModel.revealButtonActionClosure?(self.viewModel.isRevealing)
+        self.viewModel.revealButtonActionClosure?()
     }
 
     @objc func textFieldDidChange(textField: UITextField) {
-        if let inputText = gridSizeInputField.text, let gridSize = Int(inputText) {
+        if let inputText = textField.text, let gridSize = Int(inputText) {
             gridSizeChanged(newSize: gridSize)
         }
     }

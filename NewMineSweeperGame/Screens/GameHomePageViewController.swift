@@ -40,6 +40,7 @@ class GameHomePageViewController: UIViewController {
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        topHeaderView = TopHeaderView(viewModel: makeHeaderViewModel())
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -90,9 +91,9 @@ class GameHomePageViewController: UIViewController {
     }
 }
 
-private extension GameHomePageViewController {
+extension GameHomePageViewController {
     func makeHeaderViewModel() -> TopHeaderView.ViewModel {
-        var topHeaderViewModel = TopHeaderView.ViewModel(score: viewModel.currentScoreValue, gridSize: viewModel.totalTilesInRow, isRevealing: true)
+        var topHeaderViewModel = TopHeaderView.ViewModel(score: viewModel.currentScoreValue, gridSize: viewModel.totalTilesInRow)
 
         topHeaderViewModel.changeGridSizeButtonActionClosure = { [weak self] newGridSize in
             self?.viewModel.totalTilesInRow = newGridSize
@@ -100,24 +101,24 @@ private extension GameHomePageViewController {
 
         topHeaderViewModel.resetButtonActionClosure = { [weak self] in
             self?.resetGame()
+            self?.createNewGridOnScreen()
         }
 
-        topHeaderViewModel.revealButtonActionClosure = { [weak self] toShow in
-            self?.toggleMinesDisplayState(toShow: toShow)
+        topHeaderViewModel.revealButtonActionClosure = { [weak self] in
+            self?.toggleMinesDisplayState()
         }
         return topHeaderViewModel
     }
 
-    func toggleMinesDisplayState(toShow: Bool) {
+    func toggleMinesDisplayState() {
+        minesButtonsHolder.forEach { $0.toggleMineVisibility(toShow: self.viewModel.isRevealing) }
         self.viewModel.isRevealing = !self.viewModel.isRevealing
-        minesButtonsHolder.forEach { $0.toggleMineVisibility(toShow: toShow) }
-        topHeaderView.updateRevealStatus(value: self.viewModel.isRevealing)
     }
 }
 
 extension GameHomePageViewController: ViewsCustomizable {
     func layoutCustomViews() {
-        topHeaderView = TopHeaderView(viewModel: makeHeaderViewModel())
+
     }
 
     func configureCustomViews() {
@@ -134,7 +135,7 @@ extension GameHomePageViewController: ViewsCustomizable {
 extension GameHomePageViewController {
 
     func createNewGridOnScreen() {
-        populateMinesHolder(with: viewModel.totalTilesInRow)
+        populateMinesHolder()
 
         let gridDimension = viewModel.gridDimension()
 
@@ -162,10 +163,11 @@ extension GameHomePageViewController {
 
                 tileButton.gameOverClosure = { [weak self] in
                     guard let strongSelf = self else { return }
-                    strongSelf.updateGameState()
+                    strongSelf.viewModel.currentGameState = .overAndLoss
                     strongSelf.showAllMines()
                     strongSelf.showAlert(with: "You clicked on mine and now game is over", completion: {
                         strongSelf.resetGame()
+                        strongSelf.createNewGridOnScreen()
                     })
                 }
 
@@ -264,7 +266,7 @@ extension GameHomePageViewController {
         return self.viewModel.currentGameState == .overAndWin || self.viewModel.currentGameState == .overAndLoss
     }
 
-    func populateMinesHolder(with numberOfTilesInRow: Int) {
+    func populateMinesHolder() {
 
         var minesGeneratedSoFar = 0
 
@@ -295,12 +297,8 @@ extension GameHomePageViewController {
 
 extension GameHomePageViewController {
 
-    func updateGameState() {
-        self.viewModel.currentGameState = .overAndLoss
-    }
-
     func showAllMines() {
-        minesButtonsHolder.forEach { $0.showImage(with: ImageNames.skull) }
+        minesButtonsHolder.forEach { $0.showImage(with: ImageName.skull) }
     }
 
     func showAlert(with message: String, completion: @escaping () -> Void) {
@@ -321,7 +319,6 @@ extension GameHomePageViewController {
 
         resetViewModel()
         resetConstraints()
-        createNewGridOnScreen()
         topHeaderView.updateScore(value: self.viewModel.currentScoreValue)
         topHeaderView.updateGridSize(value: self.viewModel.totalTilesInRow)
     }
@@ -331,7 +328,6 @@ extension GameHomePageViewController {
         self.viewModel.totalNumberOfTilesRevealed = 0
         self.viewModel.currentScoreValue = 0
         self.viewModel.isRevealing = true
-        topHeaderView.updateRevealStatus(value: self.viewModel.isRevealing)
     }
 
     func resetConstraints() {
